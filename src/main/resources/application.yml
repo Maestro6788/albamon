@@ -1,0 +1,55 @@
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: USER
+#  profiles:
+#    active: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/albamon?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: true
+        show_sql: true
+
+
+#logging:
+#  level:
+#    com.tutorial: debug
+#
+#eureka:
+#  client:
+#    registerWithEureka: true
+#    fetchRegistry: true
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka
+##      defaultZone: http://3.38.23.41:8761/eureka
+#  instance:
+#    prefer-ip-address: true
+#
+#
+#cloud:
+#  aws:
+#    #    credentials:
+#    #      accessKey: AKIA2SJCWGIOHZXVYN5I
+#    #      secretKey: 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
+#    s3:
+#      bucket: youngcha-auth-service
+#    region:
+#      static: ap-northeast-2
+#    stack:
+#      auto: false
+#
+jwt:
+  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
