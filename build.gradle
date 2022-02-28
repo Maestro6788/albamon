@@ -29,10 +29,13 @@ dependencies {
     //web
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // eureka
-//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '3.0.4'
-// https://mvnrepository.com/artifact/net.nurigo/javaSDK
+    //implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '3.0.4'
+    //sms
     implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+    //email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'

@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+
+import java.util.Optional;
 import java.util.Random;
 
 import javax.mail.Message.RecipientType;
@@ -27,11 +29,17 @@ import org.springframework.stereotype.Service;
 
 
 import com.albamon.auth.auth.api.dto.AuthApiResponse;
+import com.albamon.auth.auth.api.dto.EmailSMSRequest;
+import com.albamon.auth.auth.api.dto.PhoneSMSRequest;
 import com.albamon.auth.auth.api.dto.TokenDto;
 import com.albamon.auth.auth.api.dto.TokenRequestDto;
 import com.albamon.auth.auth.api.dto.UserLoginRequest;
 import com.albamon.auth.auth.api.dto.UserSignUpRequest;
+import com.albamon.auth.auth.domain.EmailSMS;
+import com.albamon.auth.auth.domain.PhoneSMS;
 import com.albamon.auth.auth.domain.RefreshToken;
+import com.albamon.auth.auth.repository.EmailRedisRepository;
+import com.albamon.auth.auth.repository.PhoneRedisRepository;
 import com.albamon.auth.auth.repository.RefreshTokenRepository;
 import com.albamon.auth.common.response.ErrorCode;
 import com.albamon.auth.security.jwt.TokenProvider;
@@ -50,6 +58,9 @@ public class AuthServiceImpl implements AuthService{
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JavaMailSender emailSender;
+    private final PhoneRedisRepository phoneRedisRepository;
+    private final EmailRedisRepository emailRedisRepository;
+
 
     @Override
     public void signup(UserSignUpRequest signUpDto) {
@@ -127,6 +138,18 @@ public class AuthServiceImpl implements AuthService{
         return userRepository.existsByUserId(userId);
     }
 
+    @Override
+    public void checkPhoneNumber(PhoneSMSRequest dto) {
+
+        PhoneSMS phoneSMS = phoneRedisRepository.findById(dto.getPhoneNumber())
+            .orElseThrow();
+
+        if (!phoneSMS.getCode().equals(dto.getCode()) ){
+            throw new IllegalArgumentException("코드 틀렸습니다.");
+        }
+
+
+    }
 
     public void certifiedPhoneNumber(String phoneNumber, String cerNum) {
 
@@ -144,10 +167,15 @@ public class AuthServiceImpl implements AuthService{
 
         try {
             JSONObject obj = (JSONObject) coolsms.send(params);
+
+            PhoneSMS phoneSMS = new PhoneSMS(phoneNumber,cerNum);
+            phoneRedisRepository.save(phoneSMS);
+
             System.out.println(obj.toString());
         } catch (CoolsmsException e) {
             System.out.println(e.getMessage());
             System.out.println(e.getCode());
+            throw new IllegalArgumentException("sms 보내는 도중 오류 발생" + e.getMessage());
         }
 
     }
@@ -181,6 +209,11 @@ public class AuthServiceImpl implements AuthService{
         msgg+= "</div>";
         message.setText(msgg, "utf-8", "html");//내용
         message.setFrom(new InternetAddress("ensu7928@gmail.com","Job Korea & Albamon 테스트 API"));//보내는 사람
+
+        EmailSMS emailSMS = new EmailSMS(to,ePw);
+
+        emailRedisRepository.save(emailSMS);
+
 
         return message;
     }
@@ -218,9 +251,24 @@ public class AuthServiceImpl implements AuthService{
             emailSender.send(message);
         }catch(MailException es){
             es.printStackTrace();
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("이메일 발송 도중 오류");
         }
         return ePw;
     }
 
+    @Override
+    public void checkMessage(EmailSMSRequest dto) {
+
+
+
+        EmailSMS emailSMS = emailRedisRepository.findById(dto.getEmail())
+            .orElseThrow();
+
+        System.out.println(emailSMS);
+
+        if (!emailSMS.getCode().equals(dto.getCode())){
+            throw new IllegalArgumentException("코드 틀렸습니다.");
+        }
+
+    }
 }

@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.albamon.auth.auth.api.dto.AuthApiResponse;
+import com.albamon.auth.auth.api.dto.EmaiRequest;
+import com.albamon.auth.auth.api.dto.EmailSMSRequest;
+import com.albamon.auth.auth.api.dto.PhoneRequest;
 import com.albamon.auth.auth.api.dto.PhoneSMSRequest;
 import com.albamon.auth.auth.api.dto.TokenRequestDto;
 import com.albamon.auth.auth.api.dto.UserLoginRequest;
@@ -87,8 +90,8 @@ public class AuthController {
 	}
 
 
-	@PostMapping("/check/sendSMS")
-	public ResponseEntity<?> sendSMS(@Valid @RequestBody PhoneSMSRequest request) {
+	@PostMapping("/sendSMS")
+	public ResponseEntity<?> sendSMS(@Valid @RequestBody PhoneRequest phoneNumber) {
 
 
 		Random rand  = new Random();
@@ -98,20 +101,38 @@ public class AuthController {
 			numStr+=ran;
 		}
 
-		System.out.println("수신자 번호 : " + request.getPhoneNumber());
+		System.out.println("수신자 번호 : " + phoneNumber);
 		System.out.println("인증번호 : " + numStr);
-		authService.certifiedPhoneNumber(request.getPhoneNumber(),numStr);
+		authService.certifiedPhoneNumber(phoneNumber.getPhoneNumber(),numStr);
 
-		return ResponseEntity.status(HttpStatus.OK).body("sms");
+		return ResponseEntity.status(HttpStatus.OK).body("sms code 전송 성공");
+	}
+
+	@PostMapping("/check/sendSMS")
+	public ResponseEntity<?> checkSendSMS(@Valid @RequestBody PhoneSMSRequest request) {
+
+
+		authService.checkPhoneNumber(request);
+
+		return ResponseEntity.status(HttpStatus.OK).body("sms code 확인 성공");
+	}
+
+	@PostMapping("/sendEmail")
+	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmaiRequest email) throws Exception {
+
+
+		String confirm = authService.sendSimpleMessage(email.getEmail());
+
+		return ResponseEntity.status(HttpStatus.OK).body("email code 전송 성공");
 	}
 
 	@PostMapping("/check/sendEmail")
-	public ResponseEntity<?> sendEmail(@Valid @RequestBody PhoneSMSRequest request) throws Exception {
+	public ResponseEntity<?> checkSendEmail(@Valid @RequestBody EmailSMSRequest email) {
 
 
-		String confirm = authService.sendSimpleMessage(request.getEmail());
+		authService.checkMessage(email);
 
-		return ResponseEntity.status(HttpStatus.OK).body("sms");
+		return ResponseEntity.status(HttpStatus.OK).body("email code 확인 성공");
 	}
 
 }
