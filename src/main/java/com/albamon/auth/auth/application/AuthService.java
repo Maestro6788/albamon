@@ -11,4 +11,6 @@ public interface AuthService {
   AuthApiResponse reissue(TokenRequestDto tokenRequestDto);
   boolean checkDuplicateNickname(String nickname);
   boolean checkDuplicateUserId(String userId);
+  public void certifiedPhoneNumber(String phoneNumber, String cerNum);
+  String sendSimpleMessage(String to)throws Exception;
 }

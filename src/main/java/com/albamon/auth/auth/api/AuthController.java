@@ -1,5 +1,7 @@
 package com.albamon.auth.auth.api;
 
+import java.util.Random;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.albamon.auth.auth.api.dto.AuthApiResponse;
+import com.albamon.auth.auth.api.dto.PhoneSMSRequest;
 import com.albamon.auth.auth.api.dto.TokenRequestDto;
 import com.albamon.auth.auth.api.dto.UserLoginRequest;
 import com.albamon.auth.auth.api.dto.UserSignUpRequest;
@@ -82,4 +85,33 @@ public class AuthController {
 			SuccessCode.NICKNAME_REGISTER_POSSIBLE.getMessage(), !result);
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
+
+
+	@PostMapping("/check/sendSMS")
+	public ResponseEntity<?> sendSMS(@Valid @RequestBody PhoneSMSRequest request) {
+
+
+		Random rand  = new Random();
+		String numStr = "";
+		for(int i=0; i<4; i++) {
+			String ran = Integer.toString(rand.nextInt(10));
+			numStr+=ran;
+		}
+
+		System.out.println("수신자 번호 : " + request.getPhoneNumber());
+		System.out.println("인증번호 : " + numStr);
+		authService.certifiedPhoneNumber(request.getPhoneNumber(),numStr);
+
+		return ResponseEntity.status(HttpStatus.OK).body("sms");
+	}
+
+	@PostMapping("/check/sendEmail")
+	public ResponseEntity<?> sendEmail(@Valid @RequestBody PhoneSMSRequest request) throws Exception {
+
+
+		String confirm = authService.sendSimpleMessage(request.getEmail());
+
+		return ResponseEntity.status(HttpStatus.OK).body("sms");
+	}
+
 }
