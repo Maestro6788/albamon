@@ -142,7 +142,7 @@ public class AuthServiceImpl implements AuthService{
     public void checkPhoneNumber(PhoneSMSRequest dto) {
 
         PhoneSMS phoneSMS = phoneRedisRepository.findById(dto.getPhoneNumber())
-            .orElseThrow();
+            .orElseThrow(() -> new NullPointerException("올바른 코드가 아닙니다."));
 
         if (!phoneSMS.getCode().equals(dto.getCode()) ){
             throw new IllegalArgumentException("코드 틀렸습니다.");
@@ -262,7 +262,7 @@ public class AuthServiceImpl implements AuthService{
 
 
         EmailSMS emailSMS = emailRedisRepository.findById(dto.getEmail())
-            .orElseThrow();
+            .orElseThrow(() -> new NullPointerException("올바른 코드가 아닙니다."));
 
         System.out.println(emailSMS);
 
