@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.albamon.auth.auth.api.dto.TokenDto;
+import com.albamon.auth.common.TokenDto;
 import com.albamon.auth.common.response.ErrorCode;
 
 import io.jsonwebtoken.Claims;

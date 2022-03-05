@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.application;
+package com.albamon.auth.common;
 
 import java.util.Collections;
 

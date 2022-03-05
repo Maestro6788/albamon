@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.application;
+package com.albamon.auth.auth.config;
 
 import java.util.Properties;
 
@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
 
 @Configuration
 @PropertySource("classpath:email.properties")

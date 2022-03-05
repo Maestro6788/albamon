@@ -14,6 +14,5 @@ public class PhoneSMS {
 	@Id
 	private String phoneNumber;
 	private String code;
-
-
+	
 }

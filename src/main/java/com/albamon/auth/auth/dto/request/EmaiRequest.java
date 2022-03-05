@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.api.dto;
+package com.albamon.auth.auth.dto.request;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PhoneRequest {
+public class EmaiRequest {
 
     @NotBlank(message = "Input Your ID")
-    private String phoneNumber;
+    private String email;
 
 
 

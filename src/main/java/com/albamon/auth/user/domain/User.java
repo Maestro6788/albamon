@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.albamon.auth.common.UserType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,11 +44,22 @@ public class User {
 	@Column(name = "user_authority", nullable = false)
 	private Authority authority;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "user_type")
+	private UserType userType;
+
 	@Column(name = "user_profile_url")
 	private String profileUrl;
 
 	@Column(name = "device_token")
 	private String deviceToken;
+
+	@Column(name = "user_name", nullable = false)
+	private String userName;
+
+	@Column(name = "user_phone_number", nullable = false)
+	private String userPhoneNumber;
+
 
 	public void changePassword(String password) {
 		this.password = password;

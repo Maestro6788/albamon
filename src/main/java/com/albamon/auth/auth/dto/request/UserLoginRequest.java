@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.api.dto;
+package com.albamon.auth.auth.dto.request;
 
 import javax.validation.constraints.NotBlank;
 
@@ -30,7 +30,6 @@ public class UserLoginRequest {
         return User.builder()
             .userId(userId)
             .password(passwordEncoder.encode(password))
-            .authority(Authority.ROLE_USER)
             .build();
     }
 

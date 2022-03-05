@@ -28,10 +28,10 @@ public class AuthInfo {
 	}
 
 	public static AuthInfo UserOf(Long id){
-		return of(id,Authority.ROLE_USER);
+		return of(id,Authority.COMPANY);
 	}
 	public static AuthInfo AdminOf(Long id){
-		return of(id,Authority.ROLE_ADMIN);
+		return of(id,Authority.COMPANY);
 	}
 
 }

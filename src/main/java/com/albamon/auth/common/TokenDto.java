@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.api.dto;
+package com.albamon.auth.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TokenRequestDto {
+public class TokenDto {
+
+    private String grantType;
     private String accessToken;
     private String refreshToken;
+    private Long accessTokenExpiresIn;
+
+
 }

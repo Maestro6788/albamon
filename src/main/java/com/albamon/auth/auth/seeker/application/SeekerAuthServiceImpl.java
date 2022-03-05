@@ -1,9 +1,15 @@
-package com.albamon.auth.auth.application;
+package com.albamon.auth.auth.seeker.application;
 
 import java.util.HashMap;
+import java.util.Random;
+
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.json.simple.JSONObject;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,43 +21,35 @@ import org.springframework.transaction.annotation.Transactional;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
-import java.util.Optional;
-import java.util.Random;
-
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
-
-
-import com.albamon.auth.auth.api.dto.AuthApiResponse;
-import com.albamon.auth.auth.api.dto.EmailSMSRequest;
-import com.albamon.auth.auth.api.dto.PhoneSMSRequest;
-import com.albamon.auth.auth.api.dto.TokenDto;
-import com.albamon.auth.auth.api.dto.TokenRequestDto;
-import com.albamon.auth.auth.api.dto.UserLoginRequest;
-import com.albamon.auth.auth.api.dto.UserSignUpRequest;
 import com.albamon.auth.auth.domain.EmailSMS;
 import com.albamon.auth.auth.domain.PhoneSMS;
 import com.albamon.auth.auth.domain.RefreshToken;
+import com.albamon.auth.auth.dto.AuthApiResponse;
+import com.albamon.auth.auth.dto.TokenRequestDto;
+import com.albamon.auth.auth.dto.request.EmailSMSRequest;
+import com.albamon.auth.auth.dto.request.FindPasswordByPhoneRequest;
+import com.albamon.auth.auth.dto.request.PhoneSMSRequest;
+import com.albamon.auth.auth.dto.request.UpdatePasswordByChangeRequest;
+import com.albamon.auth.auth.dto.request.UserLoginRequest;
+import com.albamon.auth.auth.dto.request.UserSignUpRequest;
+import com.albamon.auth.common.response.ErrorCode;
+import com.albamon.auth.security.jwt.TokenProvider;
+import com.albamon.auth.user.domain.Authority;
+import com.albamon.auth.user.domain.User;
+import com.albamon.auth.user.repository.UserRepository;
+
+import com.albamon.auth.common.TokenDto;
+
 import com.albamon.auth.auth.repository.EmailRedisRepository;
 import com.albamon.auth.auth.repository.PhoneRedisRepository;
 import com.albamon.auth.auth.repository.RefreshTokenRepository;
-import com.albamon.auth.common.response.ErrorCode;
-import com.albamon.auth.security.jwt.TokenProvider;
-import com.albamon.auth.user.domain.User;
-import com.albamon.auth.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AuthServiceImpl implements AuthService{
+public class SeekerAuthServiceImpl implements SeekerAuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -86,6 +84,12 @@ public class AuthServiceImpl implements AuthService{
         User user = userRepository.findByUserId(entity.getUserId())
             .orElseThrow(() -> new NullPointerException(ErrorCode.ID_NOT_EXIST.getMessage()));
         user.changeDeviceToken(user.getDeviceToken());
+
+        //todo. 어노테이션 기반으로 해결이 가능할까?
+        if (!user.getUserId().equals(loginDto.getUserId())
+            || !user.getAuthority().equals(Authority.JOB_SEEKER)){
+            throw new IllegalArgumentException("로그인 타입 오류 - 구직자");
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -269,6 +273,83 @@ public class AuthServiceImpl implements AuthService{
         if (!emailSMS.getCode().equals(dto.getCode())){
             throw new IllegalArgumentException("코드 틀렸습니다.");
         }
+
+    }
+
+	/**
+     * 비밀번호 찾기  - 휴대폰번호로 찾기
+     *
+     * @param request
+     * @param cerNum
+     */
+
+    @Override
+    public void findPasswordByPhoneNumber(FindPasswordByPhoneRequest request, String cerNum) {
+
+        //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
+        User user = userRepository.findByUserId(request.getUserId())
+            .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
+
+        //todo. 메소드로 빼기
+        if (!user.getUserId().equals(request.getUserId())
+                || !user.getUserName().equals(request.getUserName())
+                || !user.getUserPhoneNumber().equals(request.getUserPhoneNumber())){
+            throw new IllegalArgumentException("사용자 입력 정보가 옳지 않습니다.");
+        }
+
+        //todo. 어노테이션 기반으로 해결이 가능할까?
+        if (!user.getUserId().equals(request.getUserId())
+            || !user.getAuthority().equals(Authority.JOB_SEEKER)){
+            throw new IllegalArgumentException("사용자 입력 정보가 옳지 않습니다.");
+        }
+
+        /**
+         * sms 인증 부분
+         * todo. 리팩토링 꼭 하기.. 코드 너무 더럽..
+         */
+
+        String api_key = "NCSROQ70N3X3CU6A";
+        String api_secret = "QW5S9RO93B6MSLQEHQA4D2XQKHHYNGNG";
+        Message coolsms = new Message(api_key, api_secret);
+
+        // 4 params(to, from, type, text) are mandatory. must be filled
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("to", request.getUserPhoneNumber());    // 수신전화번호
+        params.put("from", "01079286788");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+        params.put("type", "SMS");
+        params.put("text", "핫띵크 휴대폰인증 테스트 메시지 : 인증번호는" + "["+cerNum+"]" + "입니다.");
+        params.put("app_version", "test app 1.2"); // application name and version
+
+        try {
+            JSONObject obj = (JSONObject) coolsms.send(params);
+
+            PhoneSMS phoneSMS = new PhoneSMS(request.getUserPhoneNumber(),cerNum);
+            phoneRedisRepository.save(phoneSMS);
+
+            System.out.println(obj.toString());
+        } catch (CoolsmsException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCode());
+            throw new IllegalArgumentException("sms 보내는 도중 오류 발생" + e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void changePassword(long id, UpdatePasswordByChangeRequest request) {
+
+        // todo. dto > entity  매핑해서 집어 넣기
+        // todo. 문자열 다 지우기
+
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
+
+        if (!request.getCheckPassword().equals(request.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 정확하지 않습니다.");
+        }
+
+        user.changePassword(passwordEncoder.encode(request.getPassword()));
+
 
     }
 }

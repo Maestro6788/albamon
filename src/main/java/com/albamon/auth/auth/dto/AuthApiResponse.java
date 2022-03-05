@@ -1,6 +1,8 @@
-package com.albamon.auth.auth.api.dto;
+package com.albamon.auth.auth.dto;
 
 
+import com.albamon.auth.common.TokenDto;
+import com.albamon.auth.user.domain.Authority;
 import com.albamon.auth.user.domain.User;
 
 import lombok.Builder;
@@ -24,11 +26,11 @@ public class AuthApiResponse {
   private String grantType;
   private String accessToken;
   private String refreshToken;
+  private Authority authority;
   private Long accessTokenExpiresIn;
 
-  @Builder
   public AuthApiResponse(long id, String userId, String nickname, String profileUrl, String deviceToken,
-      String grantType, String accessToken, String refreshToken, Long accessTokenExpiresIn) {
+      String grantType, String accessToken, String refreshToken, Authority authority, Long accessTokenExpiresIn) {
     this.id = id;
     this.userId = userId;
     this.nickname = nickname;
@@ -37,12 +39,16 @@ public class AuthApiResponse {
     this.grantType = grantType;
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
+    this.authority = authority;
     this.accessTokenExpiresIn = accessTokenExpiresIn;
   }
 
+  @Builder
+
+
   public static AuthApiResponse of(User user, TokenDto tokenDto) {
     return new AuthApiResponse(user.getId(),user.getUserId(),user.getNickname(), user.getProfileUrl(),user.getDeviceToken(), tokenDto.getGrantType(), tokenDto.getAccessToken(),
-        tokenDto.getRefreshToken(), tokenDto.getAccessTokenExpiresIn());
+        tokenDto.getRefreshToken(), user.getAuthority(), tokenDto.getAccessTokenExpiresIn());
   }
 
 }

@@ -1,12 +1,6 @@
-package com.albamon.auth.auth.api.dto;
+package com.albamon.auth.auth.dto.request;
 
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.albamon.auth.user.domain.Authority;
-import com.albamon.auth.user.domain.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
