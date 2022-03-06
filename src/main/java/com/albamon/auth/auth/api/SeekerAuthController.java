@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.seeker.api;
+package com.albamon.auth.auth.api;
 
 import java.util.Random;
 
@@ -15,23 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.albamon.auth.auth.dto.AuthApiResponse;
-import com.albamon.auth.auth.dto.TokenRequestDto;
-import com.albamon.auth.auth.dto.request.EmaiRequest;
-import com.albamon.auth.auth.dto.request.EmailSMSRequest;
-import com.albamon.auth.auth.dto.request.FindPasswordByPhoneRequest;
-import com.albamon.auth.auth.dto.request.PhoneRequest;
-import com.albamon.auth.auth.dto.request.PhoneSMSRequest;
-import com.albamon.auth.auth.dto.request.UpdatePasswordByChangeRequest;
-import com.albamon.auth.auth.dto.request.UserLoginRequest;
-import com.albamon.auth.auth.dto.request.UserSignUpRequest;
-import com.albamon.auth.common.UserType;
+import com.albamon.auth.auth.api.dto.AuthApiResponse;
+import com.albamon.auth.auth.api.dto.TokenRequestDto;
+import com.albamon.auth.auth.api.dto.request.EmailRequest;
+import com.albamon.auth.auth.api.dto.request.EmailSMSRequest;
+import com.albamon.auth.auth.api.dto.request.FindPasswordByPhoneRequest;
+import com.albamon.auth.auth.api.dto.request.PhoneRequest;
+import com.albamon.auth.auth.api.dto.request.PhoneSMSRequest;
+import com.albamon.auth.auth.api.dto.request.UpdatePasswordByChangeRequest;
+import com.albamon.auth.auth.api.dto.request.UserLoginRequest;
+import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
 import com.albamon.auth.common.response.ApiResponse;
 import com.albamon.auth.common.response.StatusCode;
 import com.albamon.auth.common.response.SuccessCode;
-import com.albamon.auth.common.response.UserTypeValid;
 
-import com.albamon.auth.auth.seeker.application.SeekerAuthService;
+import com.albamon.auth.auth.application.SeekerAuthService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,13 +57,7 @@ public class SeekerAuthController {
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
-	@PostMapping("/reissue")
-	public ResponseEntity<?> reissue(@Valid @RequestBody TokenRequestDto tokenRequestDto) {
-		AuthApiResponse tokenDto = seekerAuthService.reissue(tokenRequestDto);
-		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
-			SuccessCode.USER_REFRESH_SUCCESS.getMessage(), tokenDto);
-		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
-	}
+
 
 	@GetMapping("/check-duplicate-user-id/{user-id}")
 	public ResponseEntity<?> checkDuplicateId(@Valid @PathVariable("user-id") String userId) {
@@ -98,7 +90,7 @@ public class SeekerAuthController {
 	}
 
 
-	@PostMapping("/sendSMS")
+/*	@PostMapping("/sendSMS")
 	public ResponseEntity<?> sendSMS(@Valid @RequestBody PhoneRequest phoneNumber) {
 
 
@@ -114,19 +106,12 @@ public class SeekerAuthController {
 		seekerAuthService.certifiedPhoneNumber(phoneNumber.getPhoneNumber(),numStr);
 
 		return ResponseEntity.status(HttpStatus.OK).body("sms code 전송 성공");
-	}
-
-	@PostMapping("/check/sendSMS")
-	public ResponseEntity<?> checkSendSMS(@Valid @RequestBody PhoneSMSRequest request) {
+	}*/
 
 
-		seekerAuthService.checkPhoneNumber(request);
-
-		return ResponseEntity.status(HttpStatus.OK).body("sms code 확인 성공");
-	}
 
 	@PostMapping("/sendEmail")
-	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmaiRequest email) throws Exception {
+	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailRequest email) throws Exception {
 
 
 		String confirm = seekerAuthService.sendSimpleMessage(email.getEmail());
@@ -134,17 +119,9 @@ public class SeekerAuthController {
 		return ResponseEntity.status(HttpStatus.OK).body("email code 전송 성공");
 	}
 
-	@PostMapping("/check/sendEmail")
-	public ResponseEntity<?> checkSendEmail(@Valid @RequestBody EmailSMSRequest email) {
 
 
-		seekerAuthService.checkMessage(email);
-
-		return ResponseEntity.status(HttpStatus.OK).body("email code 확인 성공");
-	}
-
-
-	@GetMapping("/check-pw-by-phone")
+	@PostMapping("/check-pw-by-phone")
 	public ResponseEntity<?> checkPasswordByPhone(@Valid @RequestBody FindPasswordByPhoneRequest dto) {
 
 
@@ -161,11 +138,6 @@ public class SeekerAuthController {
 		return ResponseEntity.status(HttpStatus.OK).body("비밀번호 찾기 - 휴대폰 인증 전송 ");
 	}
 
-	@PutMapping("/user/{id}/password")
-	public ResponseEntity<?> modifyPassword(@PathVariable long id, @Valid @RequestBody UpdatePasswordByChangeRequest dto) {
-		seekerAuthService.changePassword(id,dto);
 
-		return ResponseEntity.status(HttpStatus.OK).body("로그인 변경 성공 > 로그인 페이지로 이동");
-	}
 
 }

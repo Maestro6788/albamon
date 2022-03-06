@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.dto;
+package com.albamon.auth.auth.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

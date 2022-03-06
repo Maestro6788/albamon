@@ -60,6 +60,10 @@ public class User {
 	@Column(name = "user_phone_number", nullable = false)
 	private String userPhoneNumber;
 
+	@Column(name = "user_email", nullable = false)
+	private String userEmail;
+
+
 
 	public void changePassword(String password) {
 		this.password = password;

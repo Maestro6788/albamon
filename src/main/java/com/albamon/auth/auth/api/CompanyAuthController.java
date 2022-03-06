@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.company.api;
+package com.albamon.auth.auth.api;
 
 import java.util.Random;
 
@@ -15,21 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.albamon.auth.auth.dto.AuthApiResponse;
-import com.albamon.auth.auth.dto.TokenRequestDto;
-import com.albamon.auth.common.UserType;
-import com.albamon.auth.common.response.UserTypeValid;
-import com.albamon.auth.auth.dto.request.EmaiRequest;
-import com.albamon.auth.auth.dto.request.EmailSMSRequest;
-import com.albamon.auth.auth.dto.request.FindPasswordByPhoneRequest;
-import com.albamon.auth.auth.dto.request.PhoneRequest;
-import com.albamon.auth.auth.dto.request.PhoneSMSRequest;
-import com.albamon.auth.auth.dto.request.UpdatePasswordByChangeRequest;
-import com.albamon.auth.auth.dto.request.UserLoginRequest;
-import com.albamon.auth.auth.dto.request.UserSignUpRequest;
-import com.albamon.auth.auth.company.application.CompanyAuthService;
+import com.albamon.auth.auth.api.dto.AuthApiResponse;
+import com.albamon.auth.auth.api.dto.TokenRequestDto;
+import com.albamon.auth.auth.api.dto.request.EmailRequest;
+import com.albamon.auth.auth.api.dto.request.EmailSMSRequest;
+import com.albamon.auth.auth.api.dto.request.FindPasswordByPhoneRequest;
+import com.albamon.auth.auth.api.dto.request.PhoneRequest;
+import com.albamon.auth.auth.api.dto.request.PhoneSMSRequest;
+import com.albamon.auth.auth.api.dto.request.UpdatePasswordByChangeRequest;
+import com.albamon.auth.auth.api.dto.request.UserLoginRequest;
+import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
+import com.albamon.auth.auth.application.CompanyAuthService;
 import com.albamon.auth.common.response.ApiResponse;
-import com.albamon.auth.auth.domain.PhoneSMS;
 import com.albamon.auth.common.response.StatusCode;
 import com.albamon.auth.common.response.SuccessCode;
 
@@ -119,35 +116,21 @@ public class CompanyAuthController {
 		return ResponseEntity.status(HttpStatus.OK).body("sms code 전송 성공");
 	}
 
-	@PostMapping("/check/sendSMS")
-	public ResponseEntity<?> checkSendSMS(@Valid @RequestBody PhoneSMSRequest request) {
 
-
-		companyAuthService.checkPhoneNumber(request);
-
-		return ResponseEntity.status(HttpStatus.OK).body("sms code 확인 성공");
-	}
 
 	@PostMapping("/sendEmail")
-	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmaiRequest email) throws Exception {
+	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailRequest request) throws Exception {
 
 
-		String confirm = companyAuthService.sendSimpleMessage(email.getEmail());
+		String confirm = companyAuthService.sendSimpleMessage(request);
 
 		return ResponseEntity.status(HttpStatus.OK).body("email code 전송 성공");
 	}
 
-	@PostMapping("/check/sendEmail")
-	public ResponseEntity<?> checkSendEmail(@Valid @RequestBody EmailSMSRequest email) {
 
 
-		companyAuthService.checkMessage(email);
 
-		return ResponseEntity.status(HttpStatus.OK).body("email code 확인 성공");
-	}
-
-
-	@GetMapping("/check-pw-by-phone")
+	@PostMapping("/check-pw-by-phone")
 	public ResponseEntity<?> checkPasswordByPhone(@Valid @RequestBody FindPasswordByPhoneRequest dto) {
 
 
@@ -158,17 +141,15 @@ public class CompanyAuthController {
 			numStr+=ran;
 		}
 
-		companyAuthService.findPasswordByPhoneNumber(dto,numStr);
+		AuthApiResponse authApiResponse = companyAuthService.findPasswordByPhoneNumber(dto,numStr);
 
 
-		return ResponseEntity.status(HttpStatus.OK).body("비밀번호 찾기 - 휴대폰 인증 전송 ");
+		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
+			"비밀번호 찾기 - 휴대폰 인증 전송 ", authApiResponse);
+
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
-	@PutMapping("/user/{id}/password")
-	public ResponseEntity<?> modifyPassword(@PathVariable long id, @Valid @RequestBody UpdatePasswordByChangeRequest dto) {
-		companyAuthService.changePassword(id,dto);
 
-		return ResponseEntity.status(HttpStatus.OK).body("로그인 변경 성공 > 로그인 페이지로 이동");
-	}
 
 }

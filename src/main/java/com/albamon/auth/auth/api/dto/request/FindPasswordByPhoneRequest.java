@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.dto.request;
+package com.albamon.auth.auth.api.dto.request;
 
 import javax.validation.constraints.NotBlank;
 

@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.dto.request;
+package com.albamon.auth.auth.api.dto.request;
 
 import javax.validation.constraints.NotBlank;
 
@@ -15,8 +15,6 @@ public class EmailSMSRequest {
 
     @NotBlank(message = "Input Your ID")
     private String email;
-    @NotBlank(message = "Input Your userName")
-    private String userName;
     @NotBlank(message = "Input Your code")
     private String code;
 

@@ -1,4 +1,4 @@
-package com.albamon.auth.auth.dto.request;
+package com.albamon.auth.auth.api.dto.request;
 
 import javax.validation.constraints.NotBlank;
 
@@ -25,10 +25,12 @@ public class UserSignUpRequest {
 	private String password;
 	@NotBlank(message = "Input Your Nickname")
 	private String nickname;
-	@NotBlank(message = "Input Your Nickname")
+	@NotBlank(message = "Input Your userName")
 	private String userName;
-	@NotBlank(message = "Input Your Nickname")
+	@NotBlank(message = "Input Your userPhoneNumber")
 	private String userPhoneNumber;
+	@NotBlank(message = "Input Your email")
+	private String email;
 
 
 	public User toEntity(PasswordEncoder passwordEncoder) {
@@ -39,6 +41,7 @@ public class UserSignUpRequest {
 			.userName(userName)
 			.userPhoneNumber(userPhoneNumber)
 			.authority(Authority.COMPANY)
+			.userEmail(email)
 			.build();
 	}
 
