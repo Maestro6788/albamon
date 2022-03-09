@@ -59,13 +59,7 @@ public class CompanyAuthController {
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
-	@PostMapping("/reissue")
-	public ResponseEntity<?> reissue(@Valid @RequestBody TokenRequestDto tokenRequestDto) {
-		AuthApiResponse tokenDto = companyAuthService.reissue(tokenRequestDto);
-		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
-			SuccessCode.USER_REFRESH_SUCCESS.getMessage(), tokenDto);
-		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
-	}
+
 
 	@GetMapping("/check-duplicate-user-id/{user-id}")
 	public ResponseEntity<?> checkDuplicateId(@Valid @PathVariable("user-id") String userId) {
@@ -98,23 +92,6 @@ public class CompanyAuthController {
 	}
 
 
-	@PostMapping("/sendSMS")
-	public ResponseEntity<?> sendSMS(@Valid @RequestBody PhoneRequest phoneNumber) {
-
-
-		Random rand  = new Random();
-		String numStr = "";
-		for(int i=0; i<4; i++) {
-			String ran = Integer.toString(rand.nextInt(10));
-			numStr+=ran;
-		}
-
-		System.out.println("수신자 번호 : " + phoneNumber);
-		System.out.println("인증번호 : " + numStr);
-		companyAuthService.certifiedPhoneNumber(phoneNumber.getPhoneNumber(),numStr);
-
-		return ResponseEntity.status(HttpStatus.OK).body("sms code 전송 성공");
-	}
 
 
 

@@ -65,7 +65,7 @@ public class SeekerAuthServiceImpl implements SeekerAuthService {
     public void signup(UserSignUpRequest signUpDto) {
 
         User user = signUpDto.toEntity(passwordEncoder);
-
+        user.setAuthority(Authority.JOB_SEEKER);
 
         if (userRepository.existsByUserId(signUpDto.getUserId())) {
             throw new DuplicateKeyException(ErrorCode.ID_ALREADY_EXIST.getMessage());
@@ -84,7 +84,7 @@ public class SeekerAuthServiceImpl implements SeekerAuthService {
         User entity = loginDto.toEntity(passwordEncoder);
         User user = userRepository.findByUserId(entity.getUserId())
             .orElseThrow(() -> new NullPointerException(ErrorCode.ID_NOT_EXIST.getMessage()));
-        user.changeDeviceToken(user.getDeviceToken());
+        // user.changeDeviceToken(user.getDeviceToken());
 
         //todo. 어노테이션 기반으로 해결이 가능할까?
         if (!user.getUserId().equals(loginDto.getUserId())

@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.albamon.auth.user.domain.CompanyUser;
 import com.albamon.auth.user.domain.User;
 
 import lombok.AllArgsConstructor;
@@ -22,11 +23,17 @@ public class UserLoginRequest {
     private String userId;
     @NotBlank(message = "Input Your Password")
     private String password;
-    @NotBlank(message = "Input Your deviceToken")
-    private String deviceToken;
+
 
     public User toEntity(PasswordEncoder passwordEncoder) {
         return User.builder()
+            .userId(userId)
+            .password(passwordEncoder.encode(password))
+            .build();
+    }
+
+    public CompanyUser toCompanyUserEntity(PasswordEncoder passwordEncoder) {
+        return CompanyUser.builder()
             .userId(userId)
             .password(passwordEncoder.encode(password))
             .build();

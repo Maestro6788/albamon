@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 	public UserApiResponse saveDeviceToken(ReSaveDeviceTokenTarget reSaveDeviceTokenTarget) {
 		User user = findUserById(reSaveDeviceTokenTarget.getId());
 
-		user.changeDeviceToken(reSaveDeviceTokenTarget.getDeviceToken());
+		// user.changeDeviceToken(reSaveDeviceTokenTarget.getDeviceToken());
 		userRepository.save(user);
 
 		return UserApiResponse.of(user);

@@ -20,20 +20,17 @@ public class UserApiResponse {
 	private String userId;
 	private String nickname;
 	private String profileUrl;
-	private String deviceToken;
 
 	@Builder
-	public UserApiResponse(long id, String userId, String nickname, String profileUrl, String deviceToken) {
+	public UserApiResponse(long id, String userId, String nickname, String profileUrl) {
 		this.id = id;
 		this.userId = userId;
 		this.nickname = nickname;
 		this.profileUrl = profileUrl;
-		this.deviceToken = deviceToken;
 	}
 
 	public static UserApiResponse of(User user) {
-		return new UserApiResponse(user.getId(), user.getUserId(), user.getNickname(), user.getProfileUrl(),
-			user.getDeviceToken());
+		return new UserApiResponse(user.getId(), user.getUserId(), user.getNickname(), user.getProfileUrl());
 	}
 
 }

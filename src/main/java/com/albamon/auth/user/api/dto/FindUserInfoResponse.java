@@ -20,10 +20,9 @@ public class FindUserInfoResponse {
 	private String nickname;
 	private Authority authority;
 	private String profileUrl;
-	private String deviceToken;
 
 	public static FindUserInfoResponse of(User user) {
 		return new FindUserInfoResponse(user.getId(), user.getUserId(), user.getNickname(), user.getAuthority(),
-			user.getProfileUrl(), user.getDeviceToken());
+			user.getProfileUrl());
 	}
 }

@@ -44,7 +44,9 @@ import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
 import com.albamon.auth.common.response.ErrorCode;
 import com.albamon.auth.security.jwt.TokenProvider;
 import com.albamon.auth.user.domain.Authority;
+import com.albamon.auth.user.domain.CompanyUser;
 import com.albamon.auth.user.domain.User;
+import com.albamon.auth.user.repository.CompanyUserRepository;
 import com.albamon.auth.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class CompanyAuthServiceImpl implements CompanyAuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -62,39 +63,41 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     private final PhoneRedisRepository phoneRedisRepository;
     private final EmailRedisRepository emailRedisRepository;
 
+    private final CompanyUserRepository companyUserRepository;
+
 
     @Override
     public void signup(UserSignUpRequest signUpDto) {
 
 
-        User user = signUpDto.toEntity(passwordEncoder);
+        CompanyUser user = signUpDto.toCompanyUserEntity(passwordEncoder);
+        user.setAuthority(Authority.COMPANY);
 
-
-
-
-        if (userRepository.existsByUserId(signUpDto.getUserId())) {
+        if (companyUserRepository.existsByUserId(signUpDto.getUserId())) {
             throw new DuplicateKeyException(ErrorCode.ID_ALREADY_EXIST.getMessage());
         }
 
-        if (userRepository.existsByNickname(signUpDto.getNickname())) {
+        if (companyUserRepository.existsByNickname(signUpDto.getNickname())) {
             throw new DuplicateKeyException(ErrorCode.NICKNAME_ALREADY_EXIST.getMessage());
         }
 
-        userRepository.save(user);
+        companyUserRepository.save(user);
     }
 
     @Override
     public AuthApiResponse login(UserLoginRequest loginDto) {
 
-        User entity = loginDto.toEntity(passwordEncoder);
-        User user = userRepository.findByUserId(entity.getUserId())
+        System.out.println("login");
+
+        CompanyUser entity = loginDto.toCompanyUserEntity(passwordEncoder);
+        CompanyUser user = companyUserRepository.findByUserId(entity.getUserId())
             .orElseThrow(() -> new NullPointerException(ErrorCode.ID_NOT_EXIST.getMessage()));
-        user.changeDeviceToken(user.getDeviceToken());
+        // user.changeDeviceToken(user.getDeviceToken());
 
         //todo. 어노테이션 기반으로 해결이 가능할까?
         if (!user.getUserId().equals(loginDto.getUserId())
             || !user.getAuthority().equals(Authority.COMPANY)){
-            throw new IllegalArgumentException("사용자 입력 정보가 옳지 않습니다.");
+            throw new IllegalArgumentException("로그인 타입이 옳지 않습니다.");
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
@@ -109,19 +112,19 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
         refreshTokenRepository.save(refreshToken);
 
 
-        return AuthApiResponse.of(user,tokenDto);
+        return AuthApiResponse.ofCompany(user,tokenDto);
     }
 
 
 
     @Override
     public boolean checkDuplicateNickname(String nickname){
-        return userRepository.existsByNickname(nickname);
+        return companyUserRepository.existsByNickname(nickname);
     }
 
     @Override
     public boolean checkDuplicateUserId(String userId){
-        return userRepository.existsByUserId(userId);
+        return companyUserRepository.existsByUserId(userId);
     }
 
 
@@ -222,7 +225,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     public String sendSimpleMessage(EmailRequest request)throws Exception {
 
         //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
-        User user = userRepository.findByUserId(request.getUserId())
+        CompanyUser user = companyUserRepository.findByUserId(request.getUserId())
             .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
 
 
@@ -266,7 +269,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     public AuthApiResponse findPasswordByPhoneNumber(FindPasswordByPhoneRequest request, String cerNum) {
 
         //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
-        User user = userRepository.findByUserId(request.getUserId())
+        CompanyUser user = companyUserRepository.findByUserId(request.getUserId())
             .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
 
 
@@ -315,7 +318,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
             throw new IllegalArgumentException("sms 보내는 도중 오류 발생" + e.getMessage());
         }
 
-        return AuthApiResponse.passwordToRes(user);
+        return AuthApiResponse.companyPasswordToRes(user);
 
     }
 

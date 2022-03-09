@@ -19,12 +19,12 @@ import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
-@Table(name = "user")
+@Table(name = "company_user")
 @Entity
 @ToString
 @AllArgsConstructor
 @Builder
-public class User {
+public class CompanyUser {
 
 	@Id
 	@Column(name = "user_no")
