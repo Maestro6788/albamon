@@ -10,8 +10,8 @@ import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
 public interface CompanyAuthService {
   void signup(UserSignUpRequest userSignUpRequest);
   AuthApiResponse login(UserLoginRequest userLoginRequest);
-  boolean checkDuplicateNickname(String nickname);
-  boolean checkDuplicateUserId(String userId);
+  // boolean checkDuplicateNickname(String nickname);
+  // boolean checkDuplicateUserId(String userId);
 
   // void certifiedPhoneNumber(String phoneNumber, String cerNum);
 
