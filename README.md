@@ -42,7 +42,7 @@ Aggreagate을 적극적으로 활용할 생각입니다.
 ### Hexagonal Architecture🚀
 Hexagonal Architecture의 경우 Port와 Adapter의 개념을 통해 역활을 명확히 구분할 생각입니다.
 또한 Hexagonal Architecture의 핵심은 DIP라고 생각하기 때문에 프로젝트 전반적으로 DIP를 적용하여
-유연한 확장이 가능한 로직 작성을 중요실 할 생각입니다.
+유연한 확장이 가능한 로직 작성을 중요시 할 생각입니다.
 
 
 ### Multi Module Project🚀
