@@ -4,19 +4,22 @@
 
 
 ## 개발자🚀🚀
-BE Developer : ensu6788@gmail.com 
-
-FE Developer : OOO
-
 <table>
   <tr>
-   BE Developer : ensu6788@gmail.com  
-  </tr>
-   
-  <tr>
-   BE Developer : ensu6788@gmail.com  
-  </tr>
-   
+        <th colspan="4" align="center"> Developer </th>
+    </tr>
+    <tr>
+        <td colspan="4" align="center">
+        	<ul>
+        		<li>
+            	    BE Developer : ensu6788@gmail.com 
+            	</li>
+            	<li>
+            	    FE Developer : OOO
+            	</li>
+        	</ul>
+        </td>
+    </tr>
   
 </table>
 
