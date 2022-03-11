@@ -9,15 +9,13 @@
         <th colspan="4" align="center"> Developer </th>
     </tr>
     <tr>
-        <td colspan="4" align="center">
-        	<ul>
+      
         		
             	    BE Developer : ensu6788@gmail.com 
             
         FE Developer : OOO
             	
-        	</ul>
-        </td>
+        	
     </tr>
   
 </table>
