@@ -8,11 +8,17 @@ BE Developer : ensu6788@gmail.com
 
 FE Developer : OOO
 
-  <td align="center" width="130px" height="160px">
-            <a href="https://github.com/Maestro6788"><img height="100px" width="100px" src="https://avatars.githubusercontent.com/Maestro6788" /></a>
-            <br />
-            <a href="https://github.com/Maestro6788">진은수</a>
-        </td>
+<table>
+  <tr>
+   BE Developer : ensu6788@gmail.com  
+  </tr>
+   
+  <tr>
+   BE Developer : ensu6788@gmail.com  
+  </tr>
+   
+  
+</table>
 
 
 
