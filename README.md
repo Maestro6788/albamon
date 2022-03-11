@@ -11,12 +11,11 @@
     <tr>
         <td colspan="4" align="center">
         	<ul>
-        		<li>
+        		
             	    BE Developer : ensu6788@gmail.com 
-            	</li>
-            	<li>
+            
         FE Developer : OOO
-            	</li>
+            	
         	</ul>
         </td>
     </tr>
