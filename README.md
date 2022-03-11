@@ -1,6 +1,12 @@
 # 프로젝트 목표🚀🚀🚀
 프로젝트를 구현함으로써 기능을 구현이 목표로 하기 보다는 DDD, Multi Module Project, BFF 구조를 
-도입하는 것을 목표로 하고 있습니다. 
+도입하는 것을 목표로 하고 있습니다.
+
+
+## 개발자🚀🚀
+BE Developer : ensu6788@gmail.com 
+FE Developer : OOO
+
 
 ## 기능🚀🚀
 1. 로그인 (JWT / Access Token + Refresh Token)
