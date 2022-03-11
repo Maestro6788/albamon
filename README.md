@@ -8,15 +8,15 @@
   <tr>
         <th colspan="4" align="center"> Developer </th>
     </tr>
-    <tr>
+
       
         		
-            	    BE Developer : ensu6788@gmail.com 
+BE Developer : ensu6788@gmail.com 
             
-        FE Developer : OOO
+FE Developer : OOO
             	
         	
-    </tr>
+
   
 </table>
 
