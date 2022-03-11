@@ -15,7 +15,7 @@
             	    BE Developer : ensu6788@gmail.com 
             	</li>
             	<li>
-            	    FE Developer : OOO
+        FE Developer : OOO
             	</li>
         	</ul>
         </td>
