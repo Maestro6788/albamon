@@ -4,21 +4,11 @@
 
 
 ## 개발자🚀🚀
-<table>
-  <tr>
-        <th colspan="4" align="center"> Developer </th>
-    </tr>
-
-      
         		
 BE Developer : ensu6788@gmail.com 
             
 FE Developer : OOO
-            	
-        	
 
-  
-</table>
 
 
 
