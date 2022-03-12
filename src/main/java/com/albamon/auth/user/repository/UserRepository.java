@@ -27,4 +27,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.userId = :userId and u.authority = :authority")
     User checkUserIdWithAuthority(@Param("userId") String userId,@Param("authority") Authority authority);
 
+    @Query("select u from User u where u.nickname = :nickname and u.authority = :authority")
+    User checkNicknameWithAuthority(@Param("nickname") String nickname,@Param("authority") Authority authority);
+
+
+    @Query("select u from User u where u.userId = :userId and u.authority = :authority")
+    Optional<User> findByUserIdAndCompany(@Param("userId") String userId,@Param("authority") Authority authority);
+
+    @Query("select u from User u where u.userId = :userId and u.authority = :authority")
+    Optional<User> findByUserIdAndSeeker(@Param("userId") String userId,@Param("authority") Authority authority);
+
+
 }
