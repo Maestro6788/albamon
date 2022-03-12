@@ -65,9 +65,6 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
 
 
         User user = signUpDto.toCompanyUserEntity(passwordEncoder);
-
-        // System.out.println(userRepository.checkUserIdWithAuthority(user.getUserId(),user.getAuthority()));
-
         if (userRepository.existsByUserId(signUpDto.getUserId())) {
             throw new DuplicateKeyException(ErrorCode.ID_ALREADY_EXIST.getMessage());
         }

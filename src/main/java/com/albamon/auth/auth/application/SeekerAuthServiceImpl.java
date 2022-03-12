@@ -65,7 +65,6 @@ public class SeekerAuthServiceImpl implements SeekerAuthService {
     public void signup(UserSignUpRequest signUpDto) {
 
         User user = signUpDto.toEntity(passwordEncoder);
-        user.setAuthority(Authority.JOB_SEEKER);
 
         if (userRepository.existsByUserId(signUpDto.getUserId())) {
             throw new DuplicateKeyException(ErrorCode.ID_ALREADY_EXIST.getMessage());
