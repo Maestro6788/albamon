@@ -80,8 +80,13 @@ public class SeekerAuthServiceImpl implements SeekerAuthService {
     @Override
     public AuthApiResponse login(UserLoginRequest loginDto) {
 
+
+
+
         User entity = loginDto.toEntity(passwordEncoder);
-        User user = userRepository.findByUserId(entity.getUserId())
+
+
+        User user = userRepository.findByUserIdAndSeeker(entity.getUserId(),Authority.JOB_SEEKER)
             .orElseThrow(() -> new NullPointerException(ErrorCode.ID_NOT_EXIST.getMessage()));
         // user.changeDeviceToken(user.getDeviceToken());
 

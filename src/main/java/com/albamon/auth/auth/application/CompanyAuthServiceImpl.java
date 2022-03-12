@@ -80,7 +80,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     public AuthApiResponse login(UserLoginRequest loginDto) {
 
         User entity = loginDto.toCompanyUserEntity(passwordEncoder);
-        User user = userRepository.findByUserId(entity.getUserId())
+        User user = userRepository.findByUserIdAndCompany(entity.getUserId(),Authority.COMPANY)
             .orElseThrow(() -> new NullPointerException(ErrorCode.ID_NOT_EXIST.getMessage()));
         // user.changeDeviceToken(user.getDeviceToken());
 
