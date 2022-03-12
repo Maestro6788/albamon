@@ -6,7 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.albamon.auth.user.domain.Authority;
-import com.albamon.auth.user.domain.CompanyUser;
 import com.albamon.auth.user.domain.User;
 
 import lombok.AllArgsConstructor;
@@ -42,17 +41,19 @@ public class UserSignUpRequest {
 			.userName(userName)
 			.userPhoneNumber(userPhoneNumber)
 			.userEmail(email)
+			.authority(Authority.JOB_SEEKER)
 			.build();
 	}
 
-	public CompanyUser toCompanyUserEntity(PasswordEncoder passwordEncoder) {
-		return CompanyUser.builder()
+	public User toCompanyUserEntity(PasswordEncoder passwordEncoder) {
+		return User.builder()
 			.userId(userId)
 			.password(passwordEncoder.encode(password))
 			.nickname(nickname)
 			.userName(userName)
 			.userPhoneNumber(userPhoneNumber)
 			.userEmail(email)
+			.authority(Authority.COMPANY)
 			.build();
 	}
 

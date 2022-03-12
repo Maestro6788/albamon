@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.albamon.auth.user.domain.Authority;
 import com.albamon.auth.user.domain.User;
 
 @Repository
@@ -22,4 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("UPDATE User u set u.profileUrl = :imgUrl where u.id = :id")
     void saveUserProfileImg(@Param("id") long id,@Param("imgUrl") String imgUrl);
+
+    @Query("select u from User u where u.userId = :userId and u.authority = :authority")
+    User checkUserIdWithAuthority(@Param("userId") String userId,@Param("authority") Authority authority);
+
 }

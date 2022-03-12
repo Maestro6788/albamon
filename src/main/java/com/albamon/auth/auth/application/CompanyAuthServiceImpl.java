@@ -24,31 +24,23 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.mail.MailException;
 
 import com.albamon.auth.auth.api.dto.AuthApiResponse;
-import com.albamon.auth.auth.api.dto.TokenRequestDto;
 import com.albamon.auth.auth.api.dto.request.EmailRequest;
-import com.albamon.auth.auth.domain.CompanyRefreshToken;
 import com.albamon.auth.auth.domain.EmailSMS;
 import com.albamon.auth.auth.domain.PhoneSMS;
-import com.albamon.auth.auth.domain.RefreshToken;
 
-import com.albamon.auth.auth.repository.CompanyRefreshTokenRepository;
+import com.albamon.auth.auth.domain.RefreshToken;
 import com.albamon.auth.auth.repository.EmailRedisRepository;
 import com.albamon.auth.auth.repository.PhoneRedisRepository;
 import com.albamon.auth.auth.repository.RefreshTokenRepository;
 import com.albamon.auth.common.TokenDto;
-import com.albamon.auth.auth.api.dto.request.EmailSMSRequest;
 import com.albamon.auth.auth.api.dto.request.FindPasswordByPhoneRequest;
-import com.albamon.auth.auth.api.dto.request.PhoneSMSRequest;
-import com.albamon.auth.auth.api.dto.request.UpdatePasswordByChangeRequest;
 import com.albamon.auth.auth.api.dto.request.UserLoginRequest;
 import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
 
 import com.albamon.auth.common.response.ErrorCode;
 import com.albamon.auth.security.jwt.TokenProvider;
 import com.albamon.auth.user.domain.Authority;
-import com.albamon.auth.user.domain.CompanyUser;
 import com.albamon.auth.user.domain.User;
-import com.albamon.auth.user.repository.CompanyUserRepository;
 import com.albamon.auth.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -60,20 +52,21 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final CompanyRefreshTokenRepository tokenRepository;
+    private final RefreshTokenRepository tokenRepository;
     private final JavaMailSender emailSender;
     private final PhoneRedisRepository phoneRedisRepository;
     private final EmailRedisRepository emailRedisRepository;
 
-    private final CompanyUserRepository userRepository;
+    private final UserRepository userRepository;
 
 
     @Override
     public void signup(UserSignUpRequest signUpDto) {
 
 
-        CompanyUser user = signUpDto.toCompanyUserEntity(passwordEncoder);
-        user.setAuthority(Authority.COMPANY);
+        User user = signUpDto.toCompanyUserEntity(passwordEncoder);
+
+        // System.out.println(userRepository.checkUserIdWithAuthority(user.getUserId(),user.getAuthority()));
 
         if (userRepository.existsByUserId(signUpDto.getUserId())) {
             throw new DuplicateKeyException(ErrorCode.ID_ALREADY_EXIST.getMessage());
@@ -89,8 +82,8 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     @Override
     public AuthApiResponse login(UserLoginRequest loginDto) {
 
-        CompanyUser entity = loginDto.toCompanyUserEntity(passwordEncoder);
-        CompanyUser user = userRepository.findByUserId(entity.getUserId())
+        User entity = loginDto.toCompanyUserEntity(passwordEncoder);
+        User user = userRepository.findByUserId(entity.getUserId())
             .orElseThrow(() -> new NullPointerException(ErrorCode.ID_NOT_EXIST.getMessage()));
         // user.changeDeviceToken(user.getDeviceToken());
 
@@ -104,7 +97,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, user.getUserId());
 
-        CompanyRefreshToken refreshToken = CompanyRefreshToken.builder()
+        RefreshToken refreshToken = RefreshToken.builder()
             .refreshKey(authentication.getName())
             .refreshValue(tokenDto.getRefreshToken())
             .build();
@@ -118,46 +111,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
 
 
 
-    // @Override
-    // public boolean checkDuplicateNickname(String nickname){
-    //     return UserRepository.existsByNickname(nickname);
-    // }
-    //
-    // @Override
-    // public boolean checkDuplicateUserId(String userId){
-    //     return companyUserRepository.existsByUserId(userId);
-    // }
 
-
-
-    /*ublic void certifiedPhoneNumber(String phoneNumber, String cerNum) {
-
-        String api_key = "NCSROQ70N3X3CU6A";
-        String api_secret = "QW5S9RO93B6MSLQEHQA4D2XQKHHYNGNG";
-        Message coolsms = new Message(api_key, api_secret);
-
-        // 4 params(to, from, type, text) are mandatory. must be filled
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("to", phoneNumber);    // 수신전화번호
-        params.put("from", "01079286788");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
-        params.put("type", "SMS");
-        params.put("text", "핫띵크 휴대폰인증 테스트 메시지 : 인증번호는" + "["+cerNum+"]" + "입니다.");
-        params.put("app_version", "test app 1.2"); // application name and version
-
-        try {
-            JSONObject obj = (JSONObject) coolsms.send(params);
-
-            PhoneSMS phoneSMS = new PhoneSMS(phoneNumber,cerNum);
-            phoneRedisRepository.save(phoneSMS);
-
-            System.out.println(obj.toString());
-        } catch (CoolsmsException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getCode());
-            throw new IllegalArgumentException("sms 보내는 도중 오류 발생" + e.getMessage());
-        }
-
-    }*/
 
 
 
@@ -226,7 +180,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     public String sendSimpleMessage(EmailRequest request)throws Exception {
 
         //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
-        CompanyUser user = userRepository.findByUserId(request.getUserId())
+        User user = userRepository.findByUserId(request.getUserId())
             .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
 
 
@@ -270,7 +224,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
     public AuthApiResponse findPasswordByPhoneNumber(FindPasswordByPhoneRequest request, String cerNum) {
 
         //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
-        CompanyUser user = userRepository.findByUserId(request.getUserId())
+        User user = userRepository.findByUserId(request.getUserId())
             .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
 
 

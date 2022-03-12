@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.albamon.auth.user.domain.CompanyUser;
 import com.albamon.auth.user.domain.User;
 
 import lombok.AllArgsConstructor;
@@ -32,8 +31,8 @@ public class UserLoginRequest {
             .build();
     }
 
-    public CompanyUser toCompanyUserEntity(PasswordEncoder passwordEncoder) {
-        return CompanyUser.builder()
+    public User toCompanyUserEntity(PasswordEncoder passwordEncoder) {
+        return User.builder()
             .userId(userId)
             .password(passwordEncoder.encode(password))
             .build();

@@ -3,7 +3,6 @@ package com.albamon.auth.auth.api.dto;
 
 import com.albamon.auth.common.TokenDto;
 import com.albamon.auth.user.domain.Authority;
-import com.albamon.auth.user.domain.CompanyUser;
 import com.albamon.auth.user.domain.User;
 
 import lombok.Builder;
@@ -59,7 +58,7 @@ public class AuthApiResponse {
         tokenDto.getRefreshToken(), user.getAuthority(), tokenDto.getAccessTokenExpiresIn(),user.getUserPhoneNumber(),user.getUserName());
   }
 
-  public static AuthApiResponse ofCompany(CompanyUser user, TokenDto tokenDto) {
+  public static AuthApiResponse ofCompany(User user, TokenDto tokenDto) {
     return new AuthApiResponse(user.getId(),user.getUserId(),user.getNickname(), user.getProfileUrl(), tokenDto.getGrantType(), tokenDto.getAccessToken(),
         tokenDto.getRefreshToken(), user.getAuthority(), tokenDto.getAccessTokenExpiresIn(),user.getUserPhoneNumber(),user.getUserName());
   }
@@ -71,7 +70,7 @@ public class AuthApiResponse {
         .build();
   }
 
-  public static AuthApiResponse companyPasswordToRes(CompanyUser user){
+  public static AuthApiResponse companyPasswordToRes(User user){
     return AuthApiResponse.builder()
         .id(user.getId())
         .userId(user.getUserId())
