@@ -8,8 +8,9 @@
         		
 BE Developer : [BE Developer github](https://github.com/Maestro6788)
             
-FE Developer : [FE Developer github](https://github.com/roum02/vanilla-login)
+FE Developer : [FE Developer github](https://github.com/roum02)
 
+프론트가 궁금하시다면, [프론트 깃허브](https://github.com/roum02/vanilla-login)를 클릭하세요
 
 
 
