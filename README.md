@@ -6,7 +6,7 @@
 
 ## 개발자🚀🚀
         		
-BE Developer : ensu6788@gmail.com 
+BE Developer : [BE Developer github](https://github.com/Maestro6788)
             
 FE Developer : [FE Developer github](https://github.com/roum02/vanilla-login)
 
