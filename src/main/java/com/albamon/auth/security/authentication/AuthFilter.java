@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.albamon.auth.common.AuthInfo;
 
 import com.albamon.auth.security.jwt.TokenProvider;
 
@@ -33,7 +34,7 @@ public class AuthFilter extends OncePerRequestFilter {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            AuthInfo authInfo = AuthInfo.UserOf(Long.parseLong(authentication.getName())); ;
+            AuthInfo authInfo = AuthInfo.userOf(Long.parseLong(authentication.getName())); ;
             AuthInfoAttributeUtils.setAuthInfoAttributes(request, authInfo);
         }
 

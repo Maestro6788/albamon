@@ -19,9 +19,11 @@ import com.albamon.auth.auth.api.dto.TokenRequestDto;
 import com.albamon.auth.auth.api.dto.request.EmailSMSRequest;
 import com.albamon.auth.auth.api.dto.request.PhoneSMSRequest;
 import com.albamon.auth.auth.api.dto.request.UpdatePasswordByChangeRequest;
+import com.albamon.auth.common.UserType;
 import com.albamon.auth.common.response.ApiResponse;
 import com.albamon.auth.common.response.StatusCode;
 import com.albamon.auth.common.response.SuccessCode;
+import com.albamon.auth.security.authentication.RequireNoneSignIn;
 
 import lombok.RequiredArgsConstructor;
 

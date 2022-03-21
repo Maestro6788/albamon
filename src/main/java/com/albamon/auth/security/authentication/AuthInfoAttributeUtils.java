@@ -2,6 +2,8 @@
 package com.albamon.auth.security.authentication;
 
 import javax.servlet.http.HttpServletRequest;
+import com.albamon.auth.common.AuthInfo;
+
 
 public class AuthInfoAttributeUtils {
 

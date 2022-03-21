@@ -25,11 +25,13 @@ import com.albamon.auth.auth.api.dto.request.PhoneSMSRequest;
 import com.albamon.auth.auth.api.dto.request.UpdatePasswordByChangeRequest;
 import com.albamon.auth.auth.api.dto.request.UserLoginRequest;
 import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
+import com.albamon.auth.common.UserType;
 import com.albamon.auth.common.response.ApiResponse;
 import com.albamon.auth.common.response.StatusCode;
 import com.albamon.auth.common.response.SuccessCode;
 
 import com.albamon.auth.auth.application.SeekerAuthService;
+import com.albamon.auth.security.authentication.RequireNoneSignIn;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +44,7 @@ public class SeekerAuthController {
 
 	//회원가입
 	@PostMapping("/signup")
+	@RequireNoneSignIn(role = UserType.JOB_SEEKER)
 	public ResponseEntity<?> signup(@Valid @RequestBody UserSignUpRequest userSignUpRequest) {
 		seekerAuthService.signup(userSignUpRequest);
 		ApiResponse apiResponse = ApiResponse.responseMessage(StatusCode.SUCCESS,

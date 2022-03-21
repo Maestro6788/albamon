@@ -9,6 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import com.albamon.auth.common.AuthInfo;
 import com.albamon.auth.common.response.ErrorCode;
 
 @Component

@@ -11,6 +11,6 @@ import com.albamon.auth.common.UserType;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AuthRequired {
+public @interface RequireNoneSignIn {
 	UserType role() default UserType.NOT_ASSIGNED;
 }

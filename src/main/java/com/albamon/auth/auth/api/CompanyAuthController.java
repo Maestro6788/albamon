@@ -26,9 +26,11 @@ import com.albamon.auth.auth.api.dto.request.UpdatePasswordByChangeRequest;
 import com.albamon.auth.auth.api.dto.request.UserLoginRequest;
 import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
 import com.albamon.auth.auth.application.CompanyAuthService;
+import com.albamon.auth.common.UserType;
 import com.albamon.auth.common.response.ApiResponse;
 import com.albamon.auth.common.response.StatusCode;
 import com.albamon.auth.common.response.SuccessCode;
+import com.albamon.auth.security.authentication.RequireNoneSignIn;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +44,7 @@ public class CompanyAuthController {
 
 	//회원가입
 	@PostMapping("/signup")
+	@RequireNoneSignIn(role = UserType.COMPANY)
 	public ResponseEntity<?> signup(@Valid @RequestBody UserSignUpRequest userSignUpRequest ) {
 
 
