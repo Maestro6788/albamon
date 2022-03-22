@@ -30,8 +30,13 @@ public class AuthFilter extends OncePerRequestFilter {
 
         String jwt = resolveToken(request);
 
+
+
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            System.out.println("여기");
             Authentication authentication = tokenProvider.getAuthentication(jwt);
+
+            System.out.println(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             AuthInfo authInfo = AuthInfo.userOf(Long.parseLong(authentication.getName())); ;
