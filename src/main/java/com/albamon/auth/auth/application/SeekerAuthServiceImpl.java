@@ -23,6 +23,7 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 import com.albamon.auth.auth.api.dto.AuthApiResponse;
 import com.albamon.auth.auth.api.dto.TokenRequestDto;
+import com.albamon.auth.auth.api.dto.request.EmailRequest;
 import com.albamon.auth.auth.domain.EmailSMS;
 import com.albamon.auth.auth.domain.PhoneSMS;
 import com.albamon.auth.auth.domain.RefreshToken;
@@ -218,16 +219,26 @@ public class SeekerAuthServiceImpl implements SeekerAuthService {
         return key.toString();
     }
     @Override
-    public String sendSimpleMessage(String to)throws Exception {
+    public AuthApiResponse sendSimpleMessage(EmailRequest request)throws Exception {
         // TODO Auto-generated method stub
-        MimeMessage message = createMessage(to);
+
+
+        //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
+        User user = userRepository.findByUserId(request.getUserId())
+            .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
+
+        // TODO Auto-generated method stub
+        MimeMessage message = createMessage(request.getEmail());
         try{//예외처리
             emailSender.send(message);
         }catch(MailException es){
             es.printStackTrace();
             throw new IllegalArgumentException("이메일 발송 도중 오류");
         }
-        return ePw;
+
+        System.out.println(ePw);
+
+        return AuthApiResponse.passwordToRes(user);
     }
 
 

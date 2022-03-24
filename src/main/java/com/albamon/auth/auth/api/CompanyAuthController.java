@@ -102,9 +102,12 @@ public class CompanyAuthController {
 	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailRequest request) throws Exception {
 
 
-		String confirm = companyAuthService.sendSimpleMessage(request);
+		AuthApiResponse authApiResponse = companyAuthService.sendSimpleMessage(request);
 
-		return ResponseEntity.status(HttpStatus.OK).body("email code 전송 성공");
+		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
+			"email code 전송 성공 ", authApiResponse);
+
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
 

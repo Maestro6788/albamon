@@ -15,7 +15,7 @@ public interface CompanyAuthService {
 
   // void certifiedPhoneNumber(String phoneNumber, String cerNum);
 
-  String sendSimpleMessage(EmailRequest request)throws Exception;
+  AuthApiResponse sendSimpleMessage(EmailRequest request)throws Exception;
 
 
   AuthApiResponse findPasswordByPhoneNumber(FindPasswordByPhoneRequest request, String cerNum);

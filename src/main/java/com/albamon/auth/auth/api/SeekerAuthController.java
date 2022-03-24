@@ -117,9 +117,12 @@ public class SeekerAuthController {
 	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailRequest email) throws Exception {
 
 
-		String confirm = seekerAuthService.sendSimpleMessage(email.getEmail());
+		AuthApiResponse authApiResponse = seekerAuthService.sendSimpleMessage(email);
 
-		return ResponseEntity.status(HttpStatus.OK).body("email code 전송 성공");
+		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
+			"email code 전송 성공 ", authApiResponse);
+
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
 
