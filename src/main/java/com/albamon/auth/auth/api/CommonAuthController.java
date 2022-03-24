@@ -44,7 +44,8 @@ public class CommonAuthController {
 
 
 
-	@GetMapping("/check/sendSMS")
+	//@GetMapping("/check/sendSMS")
+	@PostMapping("/check/sendSMS")
 	public ResponseEntity<?> checkSendSMS(@Valid @RequestBody PhoneSMSRequest request) {
 
 
@@ -54,7 +55,8 @@ public class CommonAuthController {
 	}
 
 
-	@GetMapping ("/check/sendEmail")
+//	@GetMapping ("/check/sendEmail")
+	@PostMapping ("/check/sendEmail")
 	public ResponseEntity<?> checkSendEmail(@Valid @RequestBody EmailSMSRequest email) {
 
 

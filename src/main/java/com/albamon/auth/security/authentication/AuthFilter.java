@@ -29,6 +29,15 @@ public class AuthFilter extends OncePerRequestFilter {
 
         String jwt = resolveToken(request);
 
+
+        //  클라이언트 요청 > 필터 > 컨트롤러
+
+
+        // 상품 구매  < 로그인 구매
+        // 상품 구매 버튼 < url 헤더 access token
+        //
+
+
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
