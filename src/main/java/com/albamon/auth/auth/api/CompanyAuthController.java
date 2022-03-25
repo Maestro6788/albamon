@@ -61,36 +61,6 @@ public class CompanyAuthController {
 
 
 
-	// @GetMapping("/check-duplicate-user-id/{user-id}")
-	// public ResponseEntity<?> checkDuplicateId(@Valid @PathVariable("user-id") String userId) {
-	// 	boolean result = companyAuthService.checkDuplicateUserId(userId);
-	//
-	// 	if (result) {
-	// 		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
-	// 			SuccessCode.USER_ID_ALREADY_EXIST.getMessage(), !result);
-	// 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
-	// 	}
-	//
-	// 	ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
-	// 		SuccessCode.USER_ID_REGISTER_POSSIBLE.getMessage(), !result);
-	// 	return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
-	// }
-	//
-	// @GetMapping("/check-duplicate-nickname/{nickname}")
-	// public ResponseEntity<?> checkNickname(@Valid @PathVariable String nickname) {
-	// 	boolean result = companyAuthService.checkDuplicateNickname(nickname);
-	//
-	// 	if (result) {
-	// 		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
-	// 			SuccessCode.NICKNAME_ALREADY_EXIST.getMessage(), !result);
-	// 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
-	// 	}
-	//
-	// 	ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
-	// 		SuccessCode.NICKNAME_REGISTER_POSSIBLE.getMessage(), !result);
-	// 	return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
-	// }
-
 
 
 
@@ -99,9 +69,12 @@ public class CompanyAuthController {
 	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailRequest request) throws Exception {
 
 
-		String confirm = companyAuthService.sendSimpleMessage(request);
+		AuthApiResponse authApiResponse = companyAuthService.sendSimpleMessage(request);
 
-		return ResponseEntity.status(HttpStatus.OK).body("email code 전송 성공");
+		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
+				"email code 전송 성공", authApiResponse);
+
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
 

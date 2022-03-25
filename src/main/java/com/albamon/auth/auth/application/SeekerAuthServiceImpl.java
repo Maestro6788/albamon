@@ -7,6 +7,7 @@ import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.albamon.auth.auth.api.dto.request.*;
 import org.json.simple.JSONObject;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mail.MailException;
@@ -27,12 +28,6 @@ import com.albamon.auth.auth.domain.EmailSMS;
 import com.albamon.auth.auth.domain.PhoneSMS;
 import com.albamon.auth.auth.domain.RefreshToken;
 
-import com.albamon.auth.auth.api.dto.request.EmailSMSRequest;
-import com.albamon.auth.auth.api.dto.request.FindPasswordByPhoneRequest;
-import com.albamon.auth.auth.api.dto.request.PhoneSMSRequest;
-import com.albamon.auth.auth.api.dto.request.UpdatePasswordByChangeRequest;
-import com.albamon.auth.auth.api.dto.request.UserLoginRequest;
-import com.albamon.auth.auth.api.dto.request.UserSignUpRequest;
 import com.albamon.auth.common.response.ErrorCode;
 import com.albamon.auth.security.jwt.TokenProvider;
 import com.albamon.auth.user.domain.Authority;
@@ -218,16 +213,22 @@ public class SeekerAuthServiceImpl implements SeekerAuthService {
         return key.toString();
     }
     @Override
-    public String sendSimpleMessage(String to)throws Exception {
+    public AuthApiResponse sendSimpleMessage(EmailRequest request)throws Exception {
         // TODO Auto-generated method stub
-        MimeMessage message = createMessage(to);
+
+
+        //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
+        User user = userRepository.findByUserId(request.getUserId())
+                .orElseThrow(() -> new NullPointerException("해당 ID가 없습니다."));
+
+        MimeMessage message = createMessage(request.getEmail());
         try{//예외처리
             emailSender.send(message);
         }catch(MailException es){
             es.printStackTrace();
             throw new IllegalArgumentException("이메일 발송 도중 오류");
         }
-        return ePw;
+        return AuthApiResponse.companyPasswordToRes(user);
     }
 
 

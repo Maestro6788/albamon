@@ -175,7 +175,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
         return key.toString();
     }
     @Override
-    public String sendSimpleMessage(EmailRequest request)throws Exception {
+    public AuthApiResponse sendSimpleMessage(EmailRequest request)throws Exception {
 
         //todo. 회원 아이디 이름, 전화번호 일치하는지 확인
         User user = userRepository.findByUserId(request.getUserId())
@@ -206,7 +206,8 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
             es.printStackTrace();
             throw new IllegalArgumentException("이메일 발송 도중 오류");
         }
-        return ePw;
+
+        return AuthApiResponse.companyPasswordToRes(user);
     }
 
 /**
