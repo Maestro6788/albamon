@@ -46,6 +46,7 @@ public class CommonAuthController {
 
 
 
+
 	@PostMapping("/check/sendSMS")
 	public ResponseEntity<?> checkSendSMS(@Valid @RequestBody PhoneSMSRequest request) {
 
@@ -54,6 +55,7 @@ public class CommonAuthController {
 
 		return ResponseEntity.status(HttpStatus.OK).body("sms code 확인 성공");
 	}
+
 
 
 	@PostMapping ("/check/sendEmail")

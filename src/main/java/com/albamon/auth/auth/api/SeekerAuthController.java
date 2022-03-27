@@ -119,8 +119,9 @@ public class SeekerAuthController {
 
 		AuthApiResponse authApiResponse = seekerAuthService.sendSimpleMessage(email);
 
+
 		ApiResponse apiResponse = ApiResponse.responseData(StatusCode.SUCCESS,
-			"email code 전송 성공 ", authApiResponse);
+				"email code 전송 성공", authApiResponse);
 
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}

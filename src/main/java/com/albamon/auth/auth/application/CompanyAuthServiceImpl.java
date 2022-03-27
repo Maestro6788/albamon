@@ -121,18 +121,18 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
-        message.setSubject("Babble회원가입 이메일 인증");//제목
+        message.setSubject("알바몬 비밀번호찾기 이메일 인증");//제목
 
         String msgg="";
         msgg+= "<div style='margin:100px;'>";
-        msgg+= "<h1> 안녕하세요 Babble입니다. </h1>";
+        msgg+= "<h1> 안녕하세요 알바몬입니다. </h1>";
         msgg+= "<br>";
         msgg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
         msgg+= "<br>";
         msgg+= "<p>감사합니다!<p>";
         msgg+= "<br>";
         msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+        msgg+= "<h3 style='color:blue;'>비밀번호찾기 인증 코드입니다.</h3>";
         msgg+= "<div style='font-size:130%'>";
         msgg+= "CODE : <strong>";
         msgg+= ePw+"</strong><div><br/> ";
@@ -141,9 +141,10 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
         message.setFrom(new InternetAddress("ensu7928@gmail.com","Job Korea & Albamon 테스트 API"));//보내는 사람
 
         EmailSMS emailSMS = new EmailSMS(to,ePw);
+        System.out.println(emailSMS);
 
-        emailRedisRepository.save(emailSMS);
-
+        EmailSMS a =emailRedisRepository.save(emailSMS);
+        System.out.println(a);
 
         return message;
     }
@@ -206,15 +207,15 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
             throw new IllegalArgumentException("이메일 발송 도중 오류");
         }
 
-        System.out.println(ePw);
 
 
-
-
-        return  AuthApiResponse.passwordToRes(user);
+        return AuthApiResponse.companyPasswordToRes(user);
     }
 
-
+/**
+ *ㅇ 이메일,휴대폰 모두 60초 설정
+ *
+ */
 
     /**
      * 비밀번호 찾기  - 휴대폰번호로 찾기
@@ -260,7 +261,7 @@ public class CompanyAuthServiceImpl implements CompanyAuthService {
         params.put("to", request.getUserPhoneNumber());    // 수신전화번호
         params.put("from", "01079286788");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
         params.put("type", "SMS");
-        params.put("text", "핫띵크 휴대폰인증 테스트 메시지 : 인증번호는" + "["+cerNum+"]" + "입니다.");
+        params.put("text", "알바몬 휴대폰인증 메시지 : 인증번호는" + "["+cerNum+"]" + "입니다.");
         params.put("app_version", "test app 1.2"); // application name and version
 
         try {

@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@RedisHash(value = "sms", timeToLive = 240)
+@RedisHash(value = "sms", timeToLive = 3600)   // 4: 240
 public class PhoneSMS {
 
 	@Id
@@ -16,3 +16,6 @@ public class PhoneSMS {
 	private String code;
 	
 }
+
+// 알바몬 회원가입 x > 소셜로그인 성공 > /메인 페이지 /mainPage
+// 알바몬 회원가입 o > 소셜로그인 성공 > 메인페이지
